@@ -1,0 +1,14 @@
+{
+  "main": "dist/_worker.js/index.js",
+  "name": "mmsl-website",
+  "compatibility_date": "2026-09-29",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "vars": {}
+}
