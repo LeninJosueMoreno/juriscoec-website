@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro'
 import type { ClientData } from '../../../types'
-import { db } from '../../db'
+import { registerContact } from '../../db'
 import { isValidEmail, isValidPhone } from '../../lib/utils'
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const contentType = request.headers.get('content-type')
 
@@ -77,10 +77,16 @@ export const POST: APIRoute = async ({ request }) => {
     const cleanPhone = telefono.trim()
 
     // Try to insert into database
-    const result = await db.query(
-      'INSERT INTO juriscoec_clientes (nombre, correo, telefono) VALUES ($1, $2, $3) RETURNING *',
-      [cleanName, cleanEmail, cleanPhone],
-    )
+    const databaseUrl = locals.runtime.env.DATABASE_URL
+    if (!databaseUrl) {
+      console.error('DATABASE_URL is not configured')
+      return new Response(JSON.stringify({ error: 'Servicio no disponible' }), {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    await registerContact(databaseUrl, cleanName, cleanEmail, cleanPhone)
 
     return new Response(
       JSON.stringify({
@@ -93,6 +99,7 @@ export const POST: APIRoute = async ({ request }) => {
       },
     )
   } catch (error: any) {
+    console.error('Failed to register contact', error)
     if (error.code === '23505') {
       let message = 'A client with these details already exists'
 

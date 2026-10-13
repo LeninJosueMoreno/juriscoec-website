@@ -9,5 +9,9 @@ export async function registerClient(clientData: ClientData) {
     body: JSON.stringify(clientData),
   })
 
+  if (!response.ok) {
+    throw new Error('No se pudo registrar el contacto. Intenta nuevamente.')
+  }
+
   return response.json()
 }

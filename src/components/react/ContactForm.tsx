@@ -10,7 +10,6 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ variant = 'dark' }: ContactFormProps) {
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const isLight = variant === 'light'
@@ -34,7 +33,8 @@ export function ContactForm({ variant = 'dark' }: ContactFormProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const formData = new FormData(e.currentTarget)
+    const form = e.currentTarget
+    const formData = new FormData(form)
 
     const dataToSend = Object.fromEntries(
       formData.entries(),
@@ -60,15 +60,19 @@ export function ContactForm({ variant = 'dark' }: ContactFormProps) {
       const result = await sendEmail(dataToSend)
 
       if (!result.success) {
-        setError(result.message)
-        toast.error(error)
+        toast.error(result.message)
+        return
       }
 
-      toast.success('¡Gracias! Tu mensaje ha sido enviado correctamente.')
       await registerClient(dataToRegister)
-      setError('')
-      e.currentTarget.reset()
+      toast.success('¡Gracias! Tu mensaje ha sido enviado correctamente.')
+      form.reset()
     } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : 'No se pudo enviar el mensaje. Intenta nuevamente.',
+      )
     } finally {
       setLoading(false)
     }

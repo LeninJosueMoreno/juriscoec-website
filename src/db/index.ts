@@ -1,8 +1,14 @@
-import { Pool } from 'pg'
+import { neon } from '@neondatabase/serverless'
 
-const pool = new Pool({
-  connectionString: import.meta.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-})
-
-export const db = pool
+export function registerContact(
+  connectionString: string,
+  nombre: string,
+  correo: string,
+  telefono: string,
+) {
+  const sql = neon(connectionString)
+  return sql`
+    INSERT INTO juriscoec_clientes (nombre, correo, telefono)
+    VALUES (${nombre}, ${correo}, ${telefono})
+  `
+}

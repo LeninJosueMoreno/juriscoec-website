@@ -2,9 +2,7 @@ import type { APIRoute } from 'astro'
 import type { ContactFormData } from '../../../types'
 import { generateEmailTemplate, validateContactForm } from '../../lib/utils'
 
-const RESEND_API_KEY = import.meta.env.RESEND_API_KEY
-
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = (await request.json()) as ContactFormData
 
@@ -25,12 +23,21 @@ export const POST: APIRoute = async ({ request }) => {
       )
     }
 
+    const resendApiKey = locals.runtime.env.RESEND_API_KEY
+    if (!resendApiKey) {
+      console.error('RESEND_API_KEY is not configured')
+      return new Response(
+        JSON.stringify({ success: false, message: 'Servicio no disponible' }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } },
+      )
+    }
+
     const htmlTemplate = generateEmailTemplate(body)
 
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+        Authorization: `Bearer ${resendApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -42,6 +49,7 @@ export const POST: APIRoute = async ({ request }) => {
     })
 
     if (!response.ok) {
+      console.error('Resend rejected the email', response.status, await response.text())
       throw new Error('Error al enviar el correo electrónico')
     }
 
@@ -58,6 +66,7 @@ export const POST: APIRoute = async ({ request }) => {
       },
     )
   } catch (error) {
+    console.error('Failed to send contact email', error)
     return new Response(
       JSON.stringify({
         success: false,
