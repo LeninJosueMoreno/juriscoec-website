@@ -1,6 +1,7 @@
 interface Partner {
   slug: string
   name: string
+  email: string
   role: string
   image: string
   description: string
@@ -11,8 +12,9 @@ export const partners: Partner[] = [
   {
     slug: 'nathalia-zuniga',
     name: 'Abg. Nathalia Zúñiga',
+    email: 'nathalia.zuniga@juriscoec.co',
     role: 'Socia · Colombia y Ecuador',
-    image: '/images/partners/nathalia-zuniga-portrait.webp',
+    image: '/images/partners/nathalia-zuniga-photo.jpg',
     description:
       'Abogada graduada de la Universidad Católica de Colombia, con Maestría en Litigio y Arbitraje Internacional por la Universidad San Francisco de Quito. Se encuentra habilitada para ejercer la profesión tanto en Colombia como en Ecuador, brindando asesoría jurídica integral. Su práctica profesional se enfoca en las áreas de derecho civil y derecho de familia, donde acompaña a personas y empresas en la prevención, gestión y solución de conflictos legales.',
     specialties: ['Derecho civil', 'Derecho de familia'],
@@ -20,6 +22,7 @@ export const partners: Partner[] = [
   {
     slug: 'patricia-zuniga',
     name: 'Abg. Patricia Zuñiga',
+    email: 'patricia.zuniga@juriscoec.co',
     role: 'Socia · Colombia y Ecuador',
     image: '/images/partners/patricia-zuniga-portrait.webp',
     description:

@@ -33,6 +33,9 @@ const { partner } = Astro.props
       <div class='profile-content'>
         <p class='role'>{partner.role}</p>
         <h1>{partner.name}</h1>
+        <a class='profile-email' href={`mailto:${partner.email}`}>
+          {partner.email}
+        </a>
         <section aria-labelledby='trayectoria'>
           <h2 id='trayectoria'>Trayectoria profesional</h2>
           <p class='biography'>{partner.description}</p>
@@ -86,7 +89,15 @@ const { partner } = Astro.props
     font-weight: 650;
     line-height: 1.15;
     letter-spacing: -0.035em;
+    margin-bottom: 0.5rem;
+  }
+  .profile-email {
+    display: inline-block;
     margin-bottom: 2rem;
+    color: var(--color-secondary-dark);
+    overflow-wrap: anywhere;
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
   h2 {
     font-size: 1.125rem;
