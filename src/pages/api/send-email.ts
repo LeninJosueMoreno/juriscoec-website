@@ -35,7 +35,7 @@ export const POST: APIRoute = async ({ request }) => {
       },
       body: JSON.stringify({
         from: 'Formulario Web <no-reply@juriscoec.co>',
-        to: ['abogadazo@juriscoec.co'],
+        to: ['nathalia.zuniga@juriscoec.co'],
         subject: `Nuevo mensaje de ${body.name}`,
         html: htmlTemplate,
       }),
