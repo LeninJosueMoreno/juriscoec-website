@@ -107,8 +107,10 @@ const legalDocs = [
               </span>
             </button>
             <div class='t-acc-panel'>
-              <div class='t-acc-panel-inner px-6 py-4'>
-                <p class='whitespace-pre-line text-gray-700'>{doc.content}</p>
+              <div class='t-acc-panel-inner px-6'>
+                <p class='whitespace-pre-line py-4 text-gray-700'>
+                  {doc.content}
+                </p>
               </div>
             </div>
           </article>
@@ -144,6 +146,7 @@ const legalDocs = [
     transition-duration: var(--acc-expand);
   }
   .t-acc-panel-inner {
+    min-height: 0;
     overflow: hidden;
     opacity: 0;
     filter: blur(2px);
@@ -178,12 +181,24 @@ const legalDocs = [
 </style>
 
 <script>
-  document.querySelectorAll<HTMLElement>('.t-acc').forEach((acc) => {
-    const head = acc.querySelector<HTMLButtonElement>('.t-acc-head')
-    head?.addEventListener('click', () => {
-      const open = acc.dataset.open === 'true'
-      acc.dataset.open = String(!open)
-      head.setAttribute('aria-expanded', String(!open))
-    })
-  })
+  const initLegalAccordions = () => {
+    document
+      .querySelectorAll<HTMLButtonElement>('.t-acc-head')
+      .forEach((head) => {
+        if (head.dataset.bound === 'true') return
+        head.dataset.bound = 'true'
+
+        head.addEventListener('click', () => {
+          const acc = head.closest<HTMLElement>('.t-acc')
+          if (!acc) return
+
+          const open = acc.dataset.open === 'true'
+          acc.dataset.open = String(!open)
+          head.setAttribute('aria-expanded', String(!open))
+        })
+      })
+  }
+
+  document.addEventListener('astro:page-load', initLegalAccordions)
+  initLegalAccordions()
 </script>
